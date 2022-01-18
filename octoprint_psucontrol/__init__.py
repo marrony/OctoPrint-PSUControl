@@ -83,6 +83,8 @@ class PSUControl(octoprint.plugin.StartupPlugin,
             enablePseudoOnOff = False,
             pseudoOnGCodeCommand = 'M80',
             pseudoOffGCodeCommand = 'M81',
+            enableEmergencyStop = True,
+            emergencyStopGCodeCommand = 'M112',
             postOnDelay = 0.0,
             connectOnPowerOn = False,
             disconnectOnPowerOff = False,
@@ -430,6 +432,11 @@ class PSUControl(octoprint.plugin.StartupPlugin,
 
         if not gcode:
             gcode = cmd.split(' ', 1)[0]
+
+        if self.config['enableEmergencyStop']:
+            if gcode == self.config['emergencyStopGCodeCommand']:
+                self._logger.info('Turning PSU Off - Emergency Stop Command issued')
+                self.turn_psu_off()
 
         if self.config['enablePseudoOnOff']:
             if gcode == self.config['pseudoOnGCodeCommand']:
@@ -868,7 +875,7 @@ def __plugin_load__():
     global __plugin_hooks__
     __plugin_hooks__ = {
         "octoprint.comm.protocol.gcode.queuing": __plugin_implementation__.hook_gcode_queuing,
-        "octoprint.plugin.softwareupdate.check_config": __plugin_implementation__.get_update_information,
+        #"octoprint.plugin.softwareupdate.check_config": __plugin_implementation__.get_update_information,
         "octoprint.events.register_custom_events": __plugin_implementation__.register_custom_events,
         "octoprint.access.permissions": __plugin_implementation__.get_additional_permissions,
         "octoprint.cli.commands": cli.commands,

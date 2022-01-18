@@ -111,10 +111,18 @@
     <div class="control-group">
         <div class="controls">
             <label class="checkbox">
-            <input type="checkbox" data-bind="checked: settings.plugins.psucontrol.turnOffWhenError"> Turn off when an unrecoverable firmware or communication error occurs.
+            <input type="checkbox" data-bind="checked: settings.plugins.psucontrol.enableEmergencyStop"> Enable emergency stop command.
             </label>
         </div>
     </div>
+    <!-- ko if: settings.plugins.psucontrol.enableEmergencyStop() -->
+    <div class="control-group">
+        <label class="control-label">Emergency Stop G-Code Command</label>
+        <div class="controls">
+            <input type="text" class="input-mini" data-bind="value: settings.plugins.psucontrol.emergencyStopGCodeCommand">
+        </div>
+    </div>
+    <!-- /ko -->
     <br />
 
     <h4>Sensing</h4>
