@@ -325,7 +325,7 @@ class PSUControl(octoprint.plugin.StartupPlugin,
         self._stop_idle_timer()
 
         if self.config['powerOffWhenIdle'] and self.isPSUOn:
-            self._idleTimer = ResettableTimer(self.config['idleTimeout'] * 60, self._idle_poweroff)
+            self._idleTimer = ResettableTimer(self.config['idleTimeout'], self._idle_poweroff)
             self._idleTimer.start()
 
 
@@ -355,7 +355,7 @@ class PSUControl(octoprint.plugin.StartupPlugin,
         if self._printer.is_printing() or self._printer.is_paused():
             return
 
-        self._logger.info("Idle timeout reached after {} minute(s). Turning heaters off prior to shutting off PSU.".format(self.config['idleTimeout']))
+        self._logger.info("Idle timeout reached after {} seconds(s). Turning heaters off prior to shutting off PSU.".format(self.config['idleTimeout']))
         if self._wait_for_heaters():
             self._logger.info("Heaters below temperature.")
             self.turn_psu_off()
